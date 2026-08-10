@@ -1,0 +1,96 @@
+# ==========================================
+# PYTHON / DJANGO
+# ==========================================
+
+# Environnement virtuel
+JMenv/
+venv/
+env/
+.venv/
+*/venv/
+
+# Fichiers compilés Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.py.class
+
+# Variables d'environnement (IMPORTANT - contient mots de passe/clés)
+.env
+.env.local
+.env.*.local
+
+# Base de données locale (si jamais tu testes avec SQLite)
+db.sqlite3
+db.sqlite3-journal
+
+# Fichiers médias uploadés par les utilisateurs (photos, CV...)
+media/
+
+# Fichiers statiques collectés (générés par collectstatic)
+staticfiles/
+static_root/
+
+# Migrations (optionnel - certains préfèrent les versionner, à toi de voir)
+# */migrations/*.py
+# !*/migrations/__init__.py
+
+# Logs
+*.log
+
+# Django secret key backup (si tu en gardes un fichier séparé)
+secret_key.txt
+
+
+# ==========================================
+# REACT / NODE.JS (si frontend dans le même repo)
+# ==========================================
+
+# Dépendances
+node_modules/
+frontend/node_modules/
+
+# Build de production
+frontend/build/
+frontend/dist/
+
+# Variables d'environnement React
+frontend/.env
+frontend/.env.local
+
+# Logs npm/yarn
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+
+# ==========================================
+# ÉDITEURS / IDE
+# ==========================================
+
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ==========================================
+# SYSTÈME D'EXPLOITATION
+# ==========================================
+
+
+Desktop.ini        # Windows
+
+
+# ==========================================
+# DIVERS
+# ==========================================
+
+# Coverage tests
+htmlcov/
+.coverage
+*.cover
+
+# Cache Mistral AI / autres (si tu stockes des réponses en cache localement)
+*.cache
