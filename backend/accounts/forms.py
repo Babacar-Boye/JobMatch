@@ -1,5 +1,5 @@
 from django import forms
-from .models import Utilisateur, Recruteur, Administrateur
+from .models import Utilisateur, Recruteur, Administrateur, Candidat
 from django.utils import timezone
 
 class UtilisateurForm(forms.ModelForm):
@@ -212,3 +212,48 @@ class RecruteurForm(forms.ModelForm):
                 "required": "Le poste est obligatoire."
             }
         }
+
+
+class ChangerMotDePasseForm(forms.Form):
+    ancien_password = forms.CharField(
+        label="Ancien mot de passe",
+        min_length = 8,
+        widget = forms.PasswordInput(attrs={"class": "form-control"}),
+    )
+
+    nouveau_password1 = forms.CharField(
+        label="Nouveau mot de passe",
+        min_length = 8,
+        widget = forms.PasswordInput(attrs={"class": "form-control"}),
+    )
+
+    nouveau_password2 = forms.CharField(
+        label="Valider nouveau mot de passe",
+        min_length = 8,
+        widget = forms.PasswordInput(attrs={"class": "form-control"}),
+    )
+
+    def __init__(self, *args, **kwargs):
+
+        self.user = kwargs.pop("user")
+
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        ancien_password = cleaned_data.get("ancien_password")
+        nouveau_password1 = cleaned_data.get("nouveau_password1")
+        nouveau_password2 = cleaned_data.get("nouveau_password2")
+
+        if ancien_password and not self.user.check_password(ancien_password):
+            raise forms.ValidationError(
+                "Votre ancien mot de passe est incorrect."
+            )
+
+        if nouveau_password1 != nouveau_password2:
+            raise forms.ValidationError(
+                "Les deux nouveaux mots de passe ne correspondent pas."
+            )
+
+        return cleaned_data

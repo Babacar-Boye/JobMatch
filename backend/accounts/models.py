@@ -50,6 +50,7 @@ class Utilisateur(AbstractBaseUser, PermissionsMixin):
     statut_compte = models.CharField(max_length=40, choices=STATUT_COMPTE, default = "actif")
     date_Dernier_Connexion = models.DateTimeField(auto_now_add=True)
     date_modification = models.DateTimeField(auto_now=True)
+    #email_verifie = models.BooleanField(default=False)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -123,12 +124,14 @@ class Recruteur(models.Model):
         related_name = "recruteur",
         limit_choices_to = {"role": "recruteur"},
     )
+    poste = models.CharField(max_length = 60)
+    #compte_valide = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "Recruteur"
         verbose_name_plural = "Recruteurs"
         db_table = "recruteur"
 
-    poste = models.CharField(max_length = 60)
+    
     def __str__(self):
         return f"Recruteur : {self.utilisateur.get_full_name()} {self.poste}"

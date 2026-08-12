@@ -18,8 +18,51 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+from accounts.views import DeconnexionView
+
+
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+
+from accounts.views import (
+    UtilisateurViewSet,
+    CandidatViewSet,
+    RecruteurViewSet,
+)
+
+router = DefaultRouter()
+
+router.register("utilisateurs", UtilisateurViewSet, basename="utilisateur")
+router.register("candidats", CandidatViewSet, basename="candidat")
+router.register("recruteurs", RecruteurViewSet, basename="recruteur")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     #path("", include("accounts.urls")),
+
+    path(
+        "api/token/",
+        TokenObtainPairView.as_view(),
+        name="token_obtain_pair"
+    ),
+
+    path(
+        "api/token/refresh/",
+        TokenRefreshView.as_view(),
+        name="token_refresh"
+    ),
+
+    path(
+        "api/deconnexion/",
+        DeconnexionView.as_view(),
+        name="deconnexion"
+    ),
+
+
+   path("api/", include(router.urls)),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
