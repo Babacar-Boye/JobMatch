@@ -1,23 +1,23 @@
-# urls.py
-from django.urls import path
+from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import DemandeReinitialisationView, ConfirmerReinitialisationView, UtilisateurViewSet, CandidatViewSet, DeconnexionView
+from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
+
+from . import views
 
 router = DefaultRouter()
-router.register(
-    "utilisateurs",
-    UtilisateurViewSet,
-    basename="utilisateur"
-)
+router.register(r'utilisateurs', views.UtilisateurViewSet, basename='utilisateur')
+router.register(r'candidats', views.CandidatViewSet, basename='candidat')
+router.register(r'recruteurs', views.RecruteurViewSet, basename='recruteur')
+router.register(r'auth', views.AuthViewSet, basename='auth')
 
-router.register(
-    "candidats",
-    CandidatViewSet,
-    basename="candidat"
-)
-urlpatterns = router.urls
 urlpatterns = [
-    
-    path('mot-de-passe/reinitialiser/', DemandeReinitialisationView.as_view(), name='demande-reinitialisation'),
-    path('mot-de-passe/confirmer/', ConfirmerReinitialisationView.as_view(), name='confirmer-reinitialisation'),
+    path('', include(router.urls)),
+
+    # JWT natif SimpleJWT
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+
+    # Reset password
+    path('reinitialiser-password/demande/', views.DemandeReinitialisationView.as_view(), name='demande_reset'),
+    path('reinitialiser-password/confirmer/', views.ConfirmerReinitialisationView.as_view(), name='confirmer_reset'),
 ]

@@ -56,6 +56,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'corsheaders',
+    'rest_framework_simplejwt',
     "rest_framework_simplejwt.token_blacklist",
 ]
 
@@ -193,8 +194,8 @@ USE_TZ = True
 
 #-------------
 PASSWORD_RESET_TIMEOUT = 60 * 60 * 24  # 24h
-
-EMAIL_BACKEND = config("EMAIL_BACKEND")
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' #pour afficher les email dans le terminale
+#EMAIL_BACKEND = config("EMAIL_BACKEND")
 EMAIL_HOST = config("EMAIL_HOST")
 EMAIL_PORT = config("EMAIL_PORT", cast=int)
 EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool)
@@ -203,6 +204,15 @@ EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
 
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'AUTH_HEADER_TYPES': ('Bearer',),
 }
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'noreply@jobmatch.ai'
+
+FRONTEND_URL = 'http://localhost:3000'
