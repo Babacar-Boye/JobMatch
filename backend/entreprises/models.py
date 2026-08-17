@@ -10,19 +10,53 @@ from django.core.validators import URLValidator, RegexValidator
 class Entreprise(models.Model):
 
     class SecteurActivite(models.TextChoices):
-        TECHNOLOGIE = "technologie", _("Technologie / Informatique")
-        FINANCE = "finance", _("Finance / Banque / Assurance")
-        SANTE = "sante", _("Santé")
-        EDUCATION = "education", _("Éducation / Formation")
-        COMMERCE = "commerce", _("Commerce / Distribution")
-        INDUSTRIE = "industrie", _("Industrie / BTP")
-        AGRICULTURE = "agriculture", _("Agriculture / Agroalimentaire")
-        TELECOM = "telecom", _("Télécommunications")
-        TOURISME = "tourisme", _("Tourisme / Hôtellerie")
-        TRANSPORT = "transport", _("Transport / Logistique")
         ADMINISTRATION = "administration", _("Administration publique")
-        ONG = "ong", _("ONG / Associatif")
+        AGRICULTURE = "agriculture", _("Agriculture / Agroalimentaire")
+        AUTOMOBILE = "automobile", _("Automobile")
+        BANQUE = "banque", _("Banque / Finance / Assurance")
+        BTP = "btp", _("BTP / Construction")
+        COMMERCE = "commerce", _("Commerce / Distribution")
+        COMMUNICATION = "communication", _("Communication / Publicité / Marketing")
+        CONSEIL = "conseil", _("Conseil / Consulting")
+        CULTURE = "culture", _("Culture / Arts / Divertissement")
+        EDUCATION = "education", _("Éducation / Formation")
+        ENERGIE = "energie", _("Énergie / Pétrole / Gaz")
+        ENVIRONNEMENT = "environnement", _("Environnement / Développement durable")
+        INDUSTRIE = "industrie", _("Industrie / Manufacturière")
+        INFORMATIQUE = "informatique", _("Informatique / Technologies")
+        IMMOBILIER = "immobilier", _("Immobilier")
+        JURIDIQUE = "juridique", _("Juridique / Droit")
+        LOGISTIQUE = "logistique", _("Logistique / Transport")
+        MEDIAS = "medias", _("Médias / Audiovisuel")
+        MINES = "mines", _("Mines / Industries extractives")
+        PHARMACEUTIQUE = "pharmaceutique", _("Pharmaceutique")
+        PECHE = "peche", _("Pêche / Aquaculture")
+        RESTAURATION = "restauration", _("Restauration / Gastronomie")
+        SANTE = "sante", _("Santé")
+        SECURITE = "securite", _("Sécurité / Défense")
+        SERVICES_ENTREPRISES = "services_entreprises", _("Services aux entreprises")
+        SERVICES_PERSONNE = "services_personne", _("Services à la personne")
+        SPORT = "sport", _("Sport / Loisirs")
+        TELECOMMUNICATION = "telecommunication", _("Télécommunications")
+        TOURISME = "tourisme", _("Tourisme / Hôtellerie")
+        ONG = "ong", _("ONG / Associations / Humanitaire")
         AUTRE = "autre", _("Autre")
+        
+    # SECTEUR_ACTIVITE = [
+    #     ('technologie', 'Technologie / Informatique'),
+    #     ('finance', 'Finance / Banque / Assurance'),
+    #     ('sante', 'Santé'),
+    #     ('education', 'Éducation / Formation'),
+    #     ('commerce', 'Commerce / Distribution'),
+    #     ('industrie', 'Industrie / BTP'),
+    #     ('agriculture', 'Agriculture / Agroalimentaire'),
+    #     ('telecom', 'Télécommunications'),
+    #     ('tourisme', 'Tourisme / Hôtellerie'),
+    #     ('transport', 'Transport / Logistique'),
+    #     ('administration', 'Administration publique'),
+    #     ('ong', 'ONG / Associatif'),
+    #     ('autre', 'Autre'),
+    # ]
 
     class TailleEffectif(models.TextChoices):
         TPE = "tpe", _("1 à 9 salariés")
@@ -38,7 +72,6 @@ class Entreprise(models.Model):
 
     # Identité de l'entreprise
     raison_sociale = models.CharField(max_length=150)
-    slug = models.SlugField(max_length=170, unique=True, blank=True)
     logo = models.ImageField(upload_to="entreprises/logos/", blank=True, null=True)
     banniere = models.ImageField(upload_to="entreprises/bannieres/", blank=True, null=True)
     description = models.TextField(
@@ -55,7 +88,6 @@ class Entreprise(models.Model):
     date_creation_entreprise = models.DateField(
         blank=True, null=True, help_text=_("Date de création/fondation de l'entreprise")
     )
-
     # Identifiants légaux (contexte Sénégal)
     ninea = models.CharField(
         max_length=20,
@@ -116,11 +148,6 @@ class Entreprise(models.Model):
 
     def __str__(self):
         return self.raison_sociale
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.raison_sociale)
-        super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse("entreprise_detail", kwargs={"slug": self.slug})

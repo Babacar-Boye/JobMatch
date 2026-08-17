@@ -103,7 +103,7 @@ class OffreEmploi(models.Model):
     )
 
     # Volume / urgence
-    nombre_postes = models.PositiveSmallIntegerField(default=1)
+    # nombre_postes = models.PositiveSmallIntegerField(default=1)
     est_urgente = models.BooleanField(default=False)
 
     # Matching IA

@@ -2,6 +2,9 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MinValueValidator, MaxValueValidator
 
+from django.urls import reverse
+
+
 # Create your models here.
 
 
@@ -28,20 +31,6 @@ class CV(models.Model):
         choices=StatutTraitement.choices,
         default=StatutTraitement.EN_ATTENTE,
     )
-    score_qualite = models.FloatField(
-        blank=True,
-        null=True,
-        validators=[MinValueValidator(0), MaxValueValidator(100)],
-        help_text=_("Score de qualité du CV attribué par l'IA (0 à 100)"),
-    )
-    resume_ia = models.TextField(
-        blank=True, null=True, help_text=_("Résumé du CV généré par l'IA")
-    )
-    est_actif = models.BooleanField(
-        default=True,
-        help_text=_("Indique si ce CV est le CV actuellement utilisé par le candidat"),
-    )
-    nombre_analyses = models.PositiveIntegerField(default=0)
     date_upload = models.DateTimeField(auto_now_add=True)
     date_modification = models.DateTimeField(auto_now=True)
 
@@ -143,10 +132,10 @@ class Competence(models.Model):
         max_length=20, choices=Niveau.choices, blank=True, null=True
     )
     annees_experience = models.PositiveSmallIntegerField(blank=True, null=True)
-    extrait_par_ia = models.BooleanField(
-        default=False,
-        help_text=_("True si la compétence a été détectée automatiquement par l'IA"),
-    )
+    # extrait_par_ia = models.BooleanField(
+    #     default=False,
+    #     help_text=_("True si la compétence a été détectée automatiquement par l'IA"),
+    # )
 
     cv = models.ForeignKey(
         "candidat.CV",
@@ -217,12 +206,7 @@ class Formation(models.Model):
 
 
 
-from django.db import models
-from django.utils.translation import gettext_lazy as _
-from django.urls import reverse
-from django.core.validators import MinValueValidator
 
-# Create your models here.
 
 
 class Preference(models.Model):
@@ -285,7 +269,6 @@ class Preference(models.Model):
     niveau_poste_souhaite = models.CharField(
         max_length=20, choices=NiveauPosteSouhaite.choices, blank=True, null=True
     )
-    alerte_active = models.BooleanField(default=True)
     date_maj = models.DateField(auto_now=True)
     mode_travail = models.CharField(
         max_length=20, choices=ModeTravail.choices, default=ModeTravail.INDIFFERENT
@@ -295,27 +278,22 @@ class Preference(models.Model):
     )
 
     # Champs ajoutés
-    devise = models.CharField(max_length=10, default="FCFA")
+    # devise = models.CharField(max_length=10, default="FCFA")
     villes_preferees = models.JSONField(
         default=list,
         blank=True,
         help_text=_("Villes où le candidat souhaite travailler"),
     )
-    frequence_alerte = models.CharField(
-        max_length=20,
-        choices=FrequenceAlerte.choices,
-        default=FrequenceAlerte.QUOTIDIENNE,
-        help_text=_("Fréquence d'envoi des alertes lorsque des offres correspondent"),
-    )
+    
     mots_cles = models.CharField(
         max_length=255,
         blank=True,
         null=True,
         help_text=_("Mots-clés libres utilisés pour affiner les suggestions d'offres"),
     )
-    disponibilite_immediate = models.BooleanField(default=True)
     date_creation = models.DateTimeField(auto_now_add=True)
-
+    
+    
     class Meta:
         verbose_name = _("Préférence")
         verbose_name_plural = _("Préférences")

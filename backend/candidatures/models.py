@@ -30,18 +30,9 @@ class Candidature(models.Model):
         on_delete=models.CASCADE,
         related_name="candidatures",
     )
-    cv = models.ForeignKey(
-        "candidat.CV",
-        verbose_name=_("cv utilisé"),
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="candidatures",
-        help_text=_("CV utilisé au moment de la candidature"),
-    )
 
     # Contenu de la candidature
-    lettre_motivation = models.TextField(blank=True, null=True)
+    # lettre_motivation = models.TextField(blank=True, null=True)
     message_candidat = models.TextField(
         blank=True, null=True, help_text=_("Message libre accompagnant la candidature")
     )
@@ -75,11 +66,17 @@ class Candidature(models.Model):
     est_favorite = models.BooleanField(
         default=False, help_text=_("Marquée comme favorite par le recruteur")
     )
+    
+    score_competences = models.FloatField(null=True, blank=True)
+    score_experience = models.FloatField(null=True, blank=True)
+    score_formation = models.FloatField(null=True, blank=True)
+    
+    score_global = models.FloatField(null=True, blank=True)
 
     # Dates
     date_candidature = models.DateTimeField(auto_now_add=True)
     date_modification = models.DateTimeField(auto_now=True)
-    date_entretien = models.DateTimeField(blank=True, null=True)
+    
 
     class Meta:
         verbose_name = _("Candidature")
