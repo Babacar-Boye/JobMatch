@@ -149,10 +149,7 @@ class Entreprise(models.Model):
     def __str__(self):
         return self.raison_sociale
 
-    def get_absolute_url(self):
-        return reverse("entreprise_detail", kwargs={"slug": self.slug})
-
     @property
     def nombre_offres_actives(self):
         """Nombre d'offres d'emploi actuellement publiées par l'entreprise."""
-        return self.offres.filter(est_active=True).count() if hasattr(self, "offres") else 0
+        return self.offres.filter(statut=self.offres.model.Statut.PUBLIEE).count() if hasattr(self, "offres") else 0

@@ -21,7 +21,7 @@ class OffreEmploi(models.Model):
     class NiveauEtudes(models.TextChoices):
         AUCUN = "aucun", _("Aucun diplôme requis")
         BAC = "bac", _("Baccalauréat")
-        BAC2 = "bac2", _("Bac +2")
+        BAC2 = "bac2", _("Bac +2 / BTS")
         BAC3 = "bac3", _("Bac +3 / Licence")
         BAC4 = "bac4", _("Bac +4")
         BAC5 = "bac5", _("Bac +5 / Master")
@@ -116,6 +116,8 @@ class OffreEmploi(models.Model):
     date_expiration = models.DateField(blank=True, null=True)
     date_creation = models.DateTimeField(auto_now_add=True)
     date_modification = models.DateTimeField(auto_now=True)
+    
+    slug = models.SlugField(max_length=180, unique=True, blank=True)
 
     class Meta:
         verbose_name = _("Offre d'emploi")
@@ -128,6 +130,17 @@ class OffreEmploi(models.Model):
 
     def get_absolute_url(self):
         return reverse("offre_detail", kwargs={"slug": self.slug})
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.titre)
+            slug = base_slug
+            n = 1
+            while OffreEmploi.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                n += 1
+                slug = f"{base_slug}-{n}"
+            self.slug = slug
+        super().save(*args, **kwargs)
 
     @property
     def est_expiree(self):
@@ -138,25 +151,19 @@ class OffreEmploi(models.Model):
         return self.candidatures.count() if hasattr(self, "candidatures") else 0
 
 
-class Competence(models.Model):
+class CompetenceRequise(models.Model):
+    offre = models.ForeignKey(
+        "OffreEmploi", verbose_name=_("offre"),
+        on_delete=models.CASCADE, related_name="competences_requises",
+    )
+    nom = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
     
-    offre = models.ForeignKey("OffreEmploi", verbose_name=_("OffreEmploi"), on_delete=models.CASCADE)
-    nom = models.CharField(
-        max_length=100,
-    )
-
-    description = models.TextField(
-        blank=True,
-        null=True
-    )
-
-    categorie = models.ForeignKey(
-        CategorieCompetence,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="competences"
-    )
+    class Meta:
+        verbose_name = _("Compétence requise")
+        verbose_name_plural = _("Compétences requises")
+        db_table = "competence_requise"
+        ordering = ["nom"]
 
     def __str__(self):
-        return self.nom
+        return f"{self.nom} ({self.offre.titre})"
