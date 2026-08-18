@@ -132,6 +132,6 @@ class Recruteur(models.Model):
         verbose_name = "Recruteur"
         verbose_name_plural = "Recruteurs"
         db_table = "recruteur"
-
+        
     def __str__(self):
         return f"Recruteur : {self.utilisateur.get_full_name()} {self.poste}"

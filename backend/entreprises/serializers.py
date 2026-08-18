@@ -3,7 +3,7 @@ from .models import Entreprise
 
 
 class EntrepriseSerializer(serializers.ModelSerializer):
-
+    
     class Meta:
         model = Entreprise
         fields = [

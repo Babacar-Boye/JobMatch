@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets, status, permissions
 from .models import Entreprise
-from .serializers import EntrepriseSerializer
+from .serializers import EntrepriseSerializer, EntreprisePublicSerializer
 
 
 
@@ -11,8 +11,16 @@ from .serializers import EntrepriseSerializer
 
 
 
-class EntrepriseViewSet(viewsets.ModelViewset):
-    queryset = Entreprise.objects.all()
+class EntrepriseViewSet(viewsets.ModelViewSet):
+    
     serializer_class = EntrepriseSerializer
     permission_classes = [permissions.IsAuthenticated]
     
+    def get_queryset(self):
+        return Entreprise.objects.filter(recruteur = self.request.user.recruteur)
+    
+    
+class EnrteprisePublicViewSet(viewsets.ModelViewSet):
+    queryset = Entreprise.objects.filter(est_active=True)
+    serializer_class = EntrepriseSerializer
+    permission_classes = [permissions.IsAuthenticated]
