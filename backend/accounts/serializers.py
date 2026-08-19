@@ -5,7 +5,7 @@ from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_str
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import Candidat, Recruteur
+from .models import Utilisateur, Candidat, Recruteur
 
 Utilisateur = get_user_model()
 token_generator = PasswordResetTokenGenerator()

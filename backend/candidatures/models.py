@@ -32,7 +32,7 @@ class Candidature(models.Model):
     )
 
     # Contenu de la candidature
-    # lettre_motivation = models.TextField(blank=True, null=True)
+    lettre_motivation = models.FileField(upload_to = "candidature/lettre_motivation/" ,blank=True, null=True)
     message_candidat = models.TextField(
         blank=True, null=True, help_text=_("Message libre accompagnant la candidature")
     )
@@ -96,7 +96,6 @@ class Candidature(models.Model):
 class PieceJointe(models.Model):
 
     class TypePiece(models.TextChoices):
-        LETTRE_MOTIVATION = "lettre_motivation", _("Lettre de motivation")
         PORTFOLIO = "portfolio", _("Portfolio")
         DIPLOME = "diplome", _("Diplôme / Certificat")
         RECOMMANDATION = "recommandation", _("Lettre de recommandation")
@@ -110,7 +109,7 @@ class PieceJointe(models.Model):
     )
 
     # Champs ajoutés
-    fichier = models.FileField(upload_to="pieces_jointes/%Y/%m/")
+    fichier = models.FileField(upload_to="pieces_jointes/")
     nom_fichier_original = models.CharField(max_length=100)
     type_piece = models.CharField(
         max_length=30, choices=TypePiece.choices, default=TypePiece.AUTRE
