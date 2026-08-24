@@ -30,6 +30,9 @@ urlpatterns = router.urls
 
 
 
+
+
+
 # urlpatterns = [
 #     # CV
 #     path(

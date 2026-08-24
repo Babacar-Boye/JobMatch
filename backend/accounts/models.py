@@ -135,3 +135,7 @@ class Recruteur(models.Model):
         
     def __str__(self):
         return f"Recruteur : {self.utilisateur.get_full_name()} {self.poste}"
+    
+    
+    
+###############
