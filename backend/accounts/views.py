@@ -21,6 +21,7 @@ from .serializers import (
     RecruteurSerializer, RecruteurInscriptionSerializer,
     ChangerMotDePasseSerializer, ConnexionSerializer, DeconnexionSerializer,
     DemandeReinitialisationSerializer, ConfirmerReinitialisationSerializer,
+    AdministrateurInscriptionSerializer, AdministrateurSerializer
 )
 
 Utilisateur = get_user_model()
@@ -277,3 +278,21 @@ class ConfirmerReinitialisationView(APIView):
         user.save()
 
         return Response({"detail": "Mot de passe réinitialisé avec succès."}, status=status.HTTP_200_OK)
+    
+    
+class AdministrateurViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAdminUser]
+
+    def get_queryset(self):
+        return Administrateur.objects.select_related("utilisateur")
+
+    def get_serializer_class(self):
+        if self.action == "create":
+            return AdministrateurInscriptionSerializer
+        return AdministrateurSerializer
+
+    def perform_destroy(self, instance):
+        instance.utilisateur.statut_compte = "supprime"
+        instance.utilisateur.is_active = False
+        instance.utilisateur.save()
+        instance.delete()

@@ -49,13 +49,13 @@ class OffreEmploi(models.Model):
 
     # Relations
     entreprise = models.ForeignKey(
-        "entreprise.Entreprise",
+        "entreprises.Entreprise",
         verbose_name=_("entreprise"),
         on_delete=models.CASCADE,
         related_name="offres",
     )
     recruteur = models.ForeignKey(
-        "account.Recruteur",
+        "accounts.Recruteur",
         verbose_name=_("recruteur"),
         on_delete=models.CASCADE,
         related_name="offres_publiees",
@@ -166,4 +166,4 @@ class CompetenceRequise(models.Model):
         ordering = ["nom"]
 
     def __str__(self):
-        return f"{self.nom} ({self.offre.titre})"
+        return f"{self.nom} ({self.offres.titre})"

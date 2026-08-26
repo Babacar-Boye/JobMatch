@@ -9,6 +9,7 @@ router.register(r'utilisateurs', views.UtilisateurViewSet, basename='utilisateur
 router.register(r'candidats', views.CandidatViewSet, basename='candidat')
 router.register(r'recruteurs', views.RecruteurViewSet, basename='recruteur')
 router.register(r'auth', views.AuthViewSet, basename='auth')
+router.register(r"administrateurs", views.AdministrateurViewSet, basename="administrateur")
 
 urlpatterns = [
     path('', include(router.urls)),

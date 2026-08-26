@@ -19,13 +19,13 @@ class Candidature(models.Model):
 
     # Relations principales
     candidat = models.ForeignKey(
-        "account.Candidat",
+        "accounts.Candidat",
         verbose_name=_("candidat"),
         on_delete=models.CASCADE,
         related_name="candidatures",
     )
     offre = models.ForeignKey(
-        "offre.OffreEmploi",
+        "offres.OffreEmploi",
         verbose_name=_("offre d'emploi"),
         on_delete=models.CASCADE,
         related_name="candidatures",
@@ -102,7 +102,7 @@ class PieceJointe(models.Model):
         AUTRE = "autre", _("Autre")
 
     candidature = models.ForeignKey(
-        "candidature.Candidature",
+        "candidatures.Candidature",
         verbose_name=_("candidature"),
         on_delete=models.CASCADE,
         related_name="pieces_jointes",

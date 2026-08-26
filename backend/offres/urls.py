@@ -1,4 +1,5 @@
-from rest_framwork.routers import DefaultRouter
+from rest_framework.routers import DefaultRouter
+
 from .views import (
     OffreEmploiCreateUpdateViewSet,
     OffreEmploiListViewSet,

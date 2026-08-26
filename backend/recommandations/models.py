@@ -15,13 +15,13 @@ class Recommandation(models.Model):
         POSTULEE = "postulee", _("A conduit à une candidature")
 
     candidat = models.ForeignKey(
-        "account.Candidat",
+        "accounts.Candidat",
         verbose_name=_("candidat"),
         on_delete=models.CASCADE,
         related_name="recommandations",
     )
     offre = models.ForeignKey(
-        "offre.OffreEmploi",
+        "offres.OffreEmploi",
         verbose_name=_("offre d'emploi"),
         on_delete=models.CASCADE,
         related_name="recommandations",

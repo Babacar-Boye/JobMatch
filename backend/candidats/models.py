@@ -35,7 +35,7 @@ class CV(models.Model):
     date_modification = models.DateTimeField(auto_now=True)
 
     candidat = models.OneToOneField(
-        "account.Candidat",
+        "accounts.Candidat",
         verbose_name=_("candidat"),
         on_delete=models.CASCADE,
         related_name="cv",
@@ -74,7 +74,7 @@ class Experience(models.Model):
         blank=True, null=True, help_text=_("Description des missions et responsabilités")
     )
     competences_utilisees = models.ManyToManyField(
-        "candidat.Competence", blank=True, related_name="experiences"
+        "candidats.Competence", blank=True, related_name="experiences"
     )
     niveau_seniorite = models.CharField(
         max_length=50,
@@ -93,7 +93,7 @@ class Experience(models.Model):
     date_creation = models.DateTimeField(auto_now_add=True)
 
     cv = models.ForeignKey(
-        "candidat.CV",
+        "candidats.CV",
         verbose_name=_("cv"),
         on_delete=models.CASCADE,
         related_name="experiences",
@@ -138,7 +138,7 @@ class Competence(models.Model):
     # )
 
     cv = models.ForeignKey(
-        "candidat.CV",
+        "candidats.CV",
         verbose_name=_("cv"),
         on_delete=models.CASCADE,
         related_name="competences",
@@ -185,7 +185,7 @@ class Formation(models.Model):
     date_creation = models.DateTimeField(auto_now_add=True)
 
     cv = models.ForeignKey(
-        "candidat.CV",
+        "candidats.CV",
         verbose_name=_("cv"),
         on_delete=models.CASCADE,
         related_name="formations",
@@ -246,7 +246,7 @@ class Preference(models.Model):
 
     # Relation : un candidat a un seul jeu de préférences
     candidat = models.OneToOneField(
-        "account.Candidat",
+        "accounts.Candidat",
         verbose_name=_("candidat"),
         on_delete=models.CASCADE,
         related_name="preference",

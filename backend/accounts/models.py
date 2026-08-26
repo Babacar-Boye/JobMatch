@@ -123,7 +123,11 @@ class Recruteur(models.Model):
         limit_choices_to={"role": "recruteur"},
     )
     
-    entreprise = models.ForeignKey("entreprise.Entreprise", verbose_name=_("recruteur_entreprise"), on_delete=models.CASCADE)
+    entreprise = models.ForeignKey(
+        "entreprises.Entreprise",
+        verbose_name="recruteur_entreprise",  # Sans le _(...)
+        on_delete=models.CASCADE,
+    )
     
     poste = models.CharField(max_length=60)
     compte_valide = models.BooleanField(default=False)

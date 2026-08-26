@@ -9,9 +9,10 @@ urlpatterns = [
     # Chaque app expose ses routes sous son propre préfixe
     path('api/accounts/', include('accounts.urls')),
     path('api/candidats/', include('candidats.urls')),
-    path('api/offres/', include('offres.urls')),          # à venir
-    path('api/candidatures/', include('candidatures.urls')), # à venir
-    #path('api/mistral/', include('mistral_ai.urls')),        # à venir
+    path('api/offres/', include('offres.urls')),          
+    path('api/candidatures/', include('candidatures.urls')),
+    path('api/entreprises/', include('entreprises.urls')), 
+    #path('api/mistral/', include('mistral_ai.urls')),        
 ]
 
 # Sert les fichiers médias (photos de profil, CV, etc.) en développement

@@ -5,7 +5,7 @@ from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_str
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import Utilisateur, Candidat, Recruteur
+from .models import Utilisateur, Candidat, Recruteur, Administrateur
 
 Utilisateur = get_user_model()
 token_generator = PasswordResetTokenGenerator()
@@ -145,7 +145,7 @@ class RecruteurInscriptionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recruteur
-        fields = ["utilisateur", "poste"]
+        fields = ["utilisateur", "entreprise", "poste"] #  Ajouter entreprise ici
 
     def create(self, validated_data):
         utilisateur_data = validated_data.pop("utilisateur")
@@ -157,7 +157,6 @@ class RecruteurInscriptionSerializer(serializers.ModelSerializer):
         utilisateur.role = "recruteur"
         utilisateur.save()
 
-        # compte_valide=False par défaut → nécessite validation admin en plus de l'email
         return Recruteur.objects.create(utilisateur=utilisateur, **validated_data)
 
 
@@ -214,3 +213,37 @@ class ChangerMotDePasseSerializer(serializers.Serializer):
             raise serializers.ValidationError({"nouveau_password2": "Les nouveaux mots de passe ne correspondent pas."})
 
         return attrs
+    
+
+
+
+
+
+class AdministrateurSerializer(serializers.ModelSerializer):
+    utilisateur = UtilisateurProfilSerializer(read_only=True)
+
+    class Meta:
+        model = Administrateur
+        fields = ["id", "utilisateur"]
+
+
+class AdministrateurInscriptionSerializer(serializers.ModelSerializer):
+    utilisateur = UtilisateurInscriptionSerializer()
+
+    class Meta:
+        model = Administrateur
+        fields = ["utilisateur"]
+
+    def create(self, validated_data):
+        utilisateur_data = validated_data.pop("utilisateur")
+
+        utilisateur_serializer = UtilisateurInscriptionSerializer(data=utilisateur_data)
+        utilisateur_serializer.is_valid(raise_exception=True)
+        utilisateur = utilisateur_serializer.save()
+
+        utilisateur.role = "administrateur"
+        utilisateur.email_verifie = True
+        utilisateur.is_active = True
+        utilisateur.save()
+
+        return Administrateur.objects.create(utilisateur=utilisateur, **validated_data)

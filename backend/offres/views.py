@@ -14,7 +14,7 @@ class OffreEmploiListViewSet(viewsets.ModelViewSet):
     serializers = OffreEmploiListSerializer()
     
     
-class OffreEmploiDetailViewSet(viewsets.MOdelViewSet):
+class OffreEmploiDetailViewSet(viewsets.ModelViewSet):
     queryset = OffreEmploi.objects.all()
     serializers_class =  OffreEmploiDetailSerializer
     
