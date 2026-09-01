@@ -1,19 +1,16 @@
 import { useState } from "react";
 import styles from "./CandidatForm.module.css";
 
-// import { useState } from "react";
-// import styles from "./Candidat.module.css";
-
 import EtapeInformations from "./EtapeInformations";
 import EtapeCompte from "./EtapeCompte";
 import EtapeProfessionnel from "./EtapeProfessionnel";
-import EtapeRecherche from "./EtapeRecherche";
 import EtapeRecapitulatif from "./EtapeRecapitulatif";
+
+const TOTAL_ETAPES = 4;
 
 function Candidat() {
 
     const [etape, setEtape] = useState(1);
-
     const [erreur, setErreur] = useState("");
 
     const [formData, setFormData] = useState({
@@ -25,20 +22,19 @@ function Candidat() {
         photo: null,
 
         nom_utilisateur: "",
-        mot_de_passe:"",
+        mot_de_passe: "",
+        confirmation_mot_de_passe: "",
 
         niveau_etude: "",
         domaine_metier: "",
         lien_linkedin: "",
         lien_portfolio: "",
 
-
-        role : "candidat",
+        role: "candidat",
     });
 
     // Modifier une information
     const handleChange = (e) => {
-
         const { name, value, files } = e.target;
 
         setFormData({
@@ -47,149 +43,138 @@ function Candidat() {
         });
     };
 
+    // Vérifie l'étape en cours, renvoie un message d'erreur ou "" si tout va bien
+    const validerEtape = () => {
+
+        if (etape === 1) {
+            if (formData.prenom.trim() === "") return "Donnez votre prénom.";
+            if (formData.nom.trim() === "") return "Donnez votre nom de famille.";
+            if (formData.email.trim() === "") return "Donnez votre email.";
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) return "Cet email ne semble pas valide.";
+            if (formData.date_naissance === "") return "Donnez votre date de naissance.";
+            if (formData.telephone.trim() === "") return "Donnez votre numéro de téléphone.";
+        }
+
+        if (etape === 2) {
+            if (formData.nom_utilisateur.trim() === "") return "Choisissez un nom d'utilisateur.";
+            if (formData.mot_de_passe === "") return "Créez un mot de passe.";
+            if (formData.mot_de_passe.length < 6) return "Le mot de passe doit contenir au moins 6 caractères.";
+            if (formData.confirmation_mot_de_passe === "") return "Confirmez votre mot de passe.";
+            if (formData.mot_de_passe !== formData.confirmation_mot_de_passe) return "Les deux mots de passe ne sont pas identiques.";
+        }
+
+        return "";
+    };
 
     // Étape suivante
     const suivant = () => {
+        const message = validerEtape();
+
+        if (message) {
+            setErreur(message);
+            return;
+        }
 
         setErreur("");
 
-        if (etape === 2) {
-
-            if (formData.mot_de_passe !== formData.confirmation_mot_de_passe) {
-
-                setErreur("Les deux mots de passe ne sont pas identiques.");
-
-                return;
-            }
-        }
-
-        if (etape < 5) {
+        if (etape < TOTAL_ETAPES) {
             setEtape(etape + 1);
         }
     };
 
-
     // Étape précédente
     const precedent = () => {
+        setErreur("");
 
         if (etape > 1) {
             setEtape(etape - 1);
         }
-
     };
 
+    // Soumission (bouton "Continuer" / "Créer mon profil", ou touche Entrée)
+    const handleFormSubmit = (e) => {
+        e.preventDefault();
 
-    // Création du profil
-    const handleSubmit = () => {
+        if (etape < TOTAL_ETAPES) {
+            suivant();
+            return;
+        }
 
         console.log("Données du candidat :", formData);
-
-        // Ici tu feras plus tard ton appel à l'API Django
+        // Ici viendra l'appel à l'API Django
     };
 
-
     return (
+        <div className={styles.page}>
+            <form className={styles.card} onSubmit={handleFormSubmit} noValidate>
 
-        <div className={styles.candidatContainer}>
+                <h2 className={styles.title}>Créer mon profil candidat</h2>
 
-            <h2>Créer mon profil candidat</h2>
+                {/* Progression */}
+                <div className={styles.progression}>
+                    <span className={styles.progressionTexte}>
+                        Étape {etape} sur {TOTAL_ETAPES}
+                    </span>
 
-
-            {/* Progression */}
-
-            <div className={styles.progression}>
-
-                <span>Étape {etape} sur 4</span>
-
-                <div className={styles.progressionBar}>
-                    <div
-                        className={styles.progressionActive}
-                        style={{
-                            width: `${(etape / 4) * 100}%`
-                        }}
-                    >
+                    <div className={styles.progressionBarre}>
+                        <div
+                            className={styles.progressionActive}
+                            style={{ width: `${(etape / TOTAL_ETAPES) * 100}%` }}
+                        />
                     </div>
                 </div>
 
-            </div>
+                {/* Contenu de l'étape */}
+                <div className={styles.etapeContainer} key={etape}>
 
+                    {etape === 1 && (
+                        <EtapeInformations
+                            formData={formData}
+                            handleChange={handleChange}
+                            erreur={erreur}
+                        />
+                    )}
 
-            {/* Contenu de l'étape */}
+                    {etape === 2 && (
+                        <EtapeCompte
+                            formData={formData}
+                            handleChange={handleChange}
+                            erreur={erreur}
+                        />
+                    )}
 
-            <div className={styles.etapeContainer}>
+                    {etape === 3 && (
+                        <EtapeProfessionnel
+                            formData={formData}
+                            handleChange={handleChange}
+                        />
+                    )}
 
-                {etape === 1 && (
-                    <EtapeInformations
-                        formData={formData}
-                        handleChange={handleChange}
-                    />
-                )}
+                    {etape === 4 && (
+                        <EtapeRecapitulatif formData={formData} />
+                    )}
 
+                </div>
 
-                {etape === 2 && (
-                    <EtapeCompte
-                        formData={formData}
-                        handleChange={handleChange}
-                        erreur={erreur}
-                    />
-                )}
+                {/* Boutons */}
+                <div className={styles.navigation}>
+                    {etape > 1 ? (
+                        <button
+                            type="button"
+                            className={styles.btnRetour}
+                            onClick={precedent}
+                        >
+                            Retour
+                        </button>
+                    ) : <span />}
 
-
-                {etape === 3 && (
-                    <EtapeProfessionnel
-                        formData={formData}
-                        handleChange={handleChange}
-                    />
-                )}
-
-
-                {etape === 4 && (
-                    <EtapeRecapitulatif
-                        formData={formData}
-                    />
-                )}
-
-
-            </div>
-
-
-            {/* Boutons */}
-
-            <div className={styles.navigation}>
-
-                {etape > 1 && (
-                    <button
-                        type="button"
-                        onClick={precedent}
-                    >
-                        Retour
+                    <button type="submit" className={styles.btnSuivant}>
+                        {etape < TOTAL_ETAPES ? "Continuer" : "Créer mon profil"}
                     </button>
-                )}
+                </div>
 
-
-                {etape < 4 && (
-                    <button
-                        type="button"
-                        onClick={suivant}
-                    >
-                        Continuer
-                    </button>
-                )}
-
-
-                {etape === 4 && (
-                    <button
-                        type="button"
-                        onClick={handleSubmit}
-                    >
-                        Créer mon profil
-                    </button>
-                )}
-
-            </div>
-
+            </form>
         </div>
-
     );
 }
 
