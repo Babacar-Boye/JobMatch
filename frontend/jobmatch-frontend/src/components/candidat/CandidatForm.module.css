@@ -35,7 +35,8 @@
 
 .card {
     width: 100%;
-    max-width: 440px;
+    /* max-width: 440px; */
+    max-width: 900px;
     display: flex;
     flex-direction: column;
     gap: 24px;

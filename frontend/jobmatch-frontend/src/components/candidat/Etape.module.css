@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
+    
 }
 
 .etapeTitre {
@@ -22,6 +23,20 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
+}
+
+/* Regroupe deux champs sur la même ligne (ex: Nom + Prénom) */
+.ligne {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+/* En dessous de 380px, on repasse en une colonne pour rester lisible */
+@media (max-width: 380px) {
+    .ligne {
+        grid-template-columns: 1fr;
+    }
 }
 
 .champ label {
