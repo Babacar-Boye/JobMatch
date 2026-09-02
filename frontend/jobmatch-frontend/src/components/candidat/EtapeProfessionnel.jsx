@@ -4,7 +4,7 @@ function EtapeProfessionnel({ formData, handleChange }) {
 
         <div>
 
-            <h3>Votre profil professionnel 💼</h3>
+            <h3>Votre profil professionnel </h3>
 
             <p>
                 Parlez-nous de votre parcours.
@@ -29,20 +29,27 @@ function EtapeProfessionnel({ formData, handleChange }) {
                         Baccalauréat
                     </option>
 
-                    <option value="bac+2">
-                        Bac +2
+                    <option value="bac2">
+                        Bac +2 / BTS
                     </option>
 
-                    <option value="bac+3">
+                    <option value="bac3">
                         Bac +3
                     </option>
+                    <option value="bac4">
+                        Bac +4
+                    </option>
 
-                    <option value="bac+5">
-                        Bac +5
+                    <option value="bac5">
+                        Bac +5 / Master
                     </option>
 
                     <option value="doctorat">
                         Doctorat
+                    </option>
+
+                    <option value="autre">
+                        Autre
                     </option>
 
                 </select>

@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-
+from django.utils.translation import gettext_lazy as _
 
 class UtilisateurManager(BaseUserManager):
     def create_user(self, email, nom, prenom, nom_utilisateur, password=None, **extra_fields):
@@ -93,18 +93,33 @@ class Administrateur(models.Model):
 
 
 class Candidat(models.Model):
+    
+    class NiveauEtudes(models.TextChoices):
+        BAC = "bac", _("Baccalauréat")
+        BAC2 = "bac2", _("Bac +2 / BTS")
+        BAC3 = "bac3", _("Bac +3 / Licence")
+        BAC4 = "bac4", _("Bac +4")
+        BAC5 = "bac5", _("Bac +5 / Master")
+        DOCTORAT = "doctorat", _("Doctorat")
+        AUTRE = "autre", _("Autre")
+    
     utilisateur = models.OneToOneField(
         Utilisateur,
         on_delete=models.CASCADE,
         related_name="candidat",
         limit_choices_to={"role": "candidat"},
     )
-    niveau_etude = models.CharField(max_length=100)
+    
+    niveau_etude = models.CharField(
+        max_length=20,
+        choices=NiveauEtudes.choices,
+        blank=True,
+        null=True
+    )
     domaine_metier = models.CharField(max_length=100)
     statut_recherche = models.BooleanField(default=True)
     lien_linkedin = models.URLField(max_length=200, blank=True)
     lien_portfolio = models.URLField(max_length=200, blank=True)
-    disponibilite = models.DateField(blank=True, null=True)
 
     class Meta:
         verbose_name = "Candidat"

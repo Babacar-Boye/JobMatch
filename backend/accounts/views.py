@@ -67,29 +67,29 @@ class AuthViewSet(viewsets.ViewSet):
         serializer.is_valid(raise_exception=True)  # blackliste le refresh token
         return Response({"message": "Déconnexion réussie."}, status=status.HTTP_205_RESET_CONTENT)
 
-    @action(
-        detail=False, methods=["get"], permission_classes=[permissions.AllowAny],
-        url_path=r"verifier-email/(?P<uid>[^/.]+)/(?P<token>[^/.]+)"
-    )
-    def verifier_email(self, request, uid, token):
-        try:
-            user_id = force_str(urlsafe_base64_decode(uid))
-            utilisateur = Utilisateur.objects.get(pk=user_id)
-        except (TypeError, ValueError, OverflowError, Utilisateur.DoesNotExist):
-            return Response({"message": "Lien de vérification invalide."}, status=status.HTTP_400_BAD_REQUEST)
+    # @action(
+    #     detail=False, methods=["get"], permission_classes=[permissions.AllowAny],
+    #     url_path=r"verifier-email/(?P<uid>[^/.]+)/(?P<token>[^/.]+)"
+    # )
+    # def verifier_email(self, request, uid, token):
+    #     try:
+    #         user_id = force_str(urlsafe_base64_decode(uid))
+    #         utilisateur = Utilisateur.objects.get(pk=user_id)
+    #     except (TypeError, ValueError, OverflowError, Utilisateur.DoesNotExist):
+    #         return Response({"message": "Lien de vérification invalide."}, status=status.HTTP_400_BAD_REQUEST)
 
-        if not default_token_generator.check_token(utilisateur, token):
-            return Response({"message": "Lien de vérification invalide ou expiré."}, status=status.HTTP_400_BAD_REQUEST)
+    #     if not default_token_generator.check_token(utilisateur, token):
+    #         return Response({"message": "Lien de vérification invalide ou expiré."}, status=status.HTTP_400_BAD_REQUEST)
 
-        utilisateur.email_verifie = True
+    #     utilisateur.email_verifie = True
 
-        # Un candidat devient actif direct ; un recruteur attend en plus la validation admin
-        if utilisateur.role == "candidat":
-            utilisateur.is_active = True
+    #     # Un candidat devient actif direct ; un recruteur attend en plus la validation admin
+    #     if utilisateur.role == "candidat":
+    #         utilisateur.is_active = True
 
-        utilisateur.save()
+    #     utilisateur.save()
 
-        return Response({"message": "Email vérifié avec succès."}, status=status.HTTP_200_OK)
+    #     return Response({"message": "Email vérifié avec succès."}, status=status.HTTP_200_OK)
 
 
 # ─────────────────────────────

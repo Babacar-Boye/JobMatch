@@ -6,11 +6,11 @@ function EtapeInformations({ formData, handleChange, erreur }) {
 
         <div className={styles.etape}>
 
-            <h3 className={styles.etapeTitre}>Faisons connaissance </h3>
+            <h3 className={styles.etapeTitre}>Informations personnelles </h3>
 
-            <p className={styles.etapeSousTitre}>
+            {/* <p className={styles.etapeSousTitre}>
                 Commençons par quelques informations personnelles.
-            </p>
+            </p> */}
 
             <div className={styles.ligne}>
                 <div className={styles.champ}>
@@ -71,7 +71,7 @@ function EtapeInformations({ formData, handleChange, erreur }) {
                 />
             </div>
 
-            <div className={styles.champ}>
+            {/* <div className={styles.champ}>
                 <label htmlFor="photo">Photo</label>
                 <input
                     type="file"
@@ -79,7 +79,7 @@ function EtapeInformations({ formData, handleChange, erreur }) {
                     name="photo"
                     onChange={handleChange}
                 />
-            </div>
+            </div> */}
 
             {erreur && (
                 <p className={styles.erreur}>

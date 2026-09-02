@@ -5,8 +5,9 @@ import EtapeInformations from "./EtapeInformations";
 import EtapeCompte from "./EtapeCompte";
 import EtapeProfessionnel from "./EtapeProfessionnel";
 import EtapeRecapitulatif from "./EtapeRecapitulatif";
+import EtapePhotoProfil from "./EtapePhotoProfil";
 
-const TOTAL_ETAPES = 4;
+const TOTAL_ETAPES = 5;
 
 function Candidat() {
 
@@ -151,6 +152,14 @@ function Candidat() {
                     )}
 
                     {etape === 4 && (
+                        <EtapePhotoProfil
+                            formData={formData}
+                            handleChange={handleChange}
+                            erreur={erreur}
+                        />
+                    )}
+
+                    {etape === 5 && (
                         <EtapeRecapitulatif formData={formData} />
                     )}
 
