@@ -1,0 +1,3 @@
+dans le fichier models.py de accounts 
+il faut changer dans le model utilisateur le champs compte_verifier et le mettre par defaut false  
+et si l'utlisateur clique sur le lien et le tocken est correcte on le change en true

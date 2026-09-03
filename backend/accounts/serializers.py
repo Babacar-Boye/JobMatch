@@ -101,7 +101,7 @@ class CandidatSerializer(serializers.ModelSerializer):
         model = Candidat
         fields = [
             "id", "utilisateur", "niveau_etude", "domaine_metier",
-            "statut_recherche", "lien_linkedin", "lien_portfolio",
+            "statut_recherche", "disponibilite", "lien_linkedin", "lien_portfolio",
         ]
 
 
@@ -112,7 +112,7 @@ class CandidatInscriptionSerializer(serializers.ModelSerializer):
         model = Candidat
         fields = [
             "utilisateur", "niveau_etude", "domaine_metier",
-            "statut_recherche", "lien_linkedin", "lien_portfolio",
+            "statut_recherche", "disponibilite", "lien_linkedin", "lien_portfolio",
         ]
 
     def create(self, validated_data):

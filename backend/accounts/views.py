@@ -152,6 +152,29 @@ class UtilisateurViewSet(viewsets.ViewSet):
 # CANDIDAT
 # ─────────────────────────────
 
+# class CandidatViewSet(viewsets.ModelViewSet):
+#     queryset = Candidat.objects.all()
+#     serializer_class = CandidatSerializer
+
+#     def get_serializer_class(self):
+#         if self.action == "create":
+#             return CandidatInscriptionSerializer
+#         return CandidatSerializer
+
+#     def get_permissions(self):
+#         if self.action == "create":
+#             return [permissions.AllowAny()]
+#         return [IsAdministrateur()]  # le candidat gère son propre profil via /utilisateurs/modifier-profil/
+
+#     def perform_create(self, serializer):
+#         self._candidat_cree = serializer.save()
+
+#     def create(self, request, *args, **kwargs):
+#         response = super().create(request, *args, **kwargs)
+#         _envoyer_email_verification(request, self._candidat_cree.utilisateur)
+#         response.data = {"message": "Compte créé. Vérifiez votre email pour l'activer."}
+#         return response
+
 class CandidatViewSet(viewsets.ModelViewSet):
     queryset = Candidat.objects.all()
     serializer_class = CandidatSerializer
@@ -164,18 +187,46 @@ class CandidatViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action == "create":
             return [permissions.AllowAny()]
-        return [IsAdministrateur()]  # le candidat gère son propre profil via /utilisateurs/modifier-profil/
+        return [IsAdministrateur()]
 
     def perform_create(self, serializer):
         self._candidat_cree = serializer.save()
 
     def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
+        data = self._reconstruire_donnees_imbriquees(request.data)
+
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+
         _envoyer_email_verification(request, self._candidat_cree.utilisateur)
-        response.data = {"message": "Compte créé. Vérifiez votre email pour l'activer."}
-        return response
 
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            {"message": "Compte créé. Vérifiez votre email pour l'activer."},
+            status=status.HTTP_201_CREATED,
+            headers=headers,
+        )
 
+    @staticmethod
+    def _reconstruire_donnees_imbriquees(raw_data):
+        """Transforme les clés plates 'utilisateur.xxx' (envoyées en
+        multipart/FormData) en dict imbriqué {'utilisateur': {'xxx': ...}}."""
+        data = {}
+        utilisateur_data = {}
+
+        for key in raw_data.keys():
+            value = raw_data.get(key)
+            if key.startswith("utilisateur."):
+                sous_cle = key.split(".", 1)[1]
+                utilisateur_data[sous_cle] = value
+            else:
+                data[key] = value
+
+        if utilisateur_data:
+            data["utilisateur"] = utilisateur_data
+
+        return data
 # ─────────────────────────────
 # RECRUTEUR
 # ─────────────────────────────

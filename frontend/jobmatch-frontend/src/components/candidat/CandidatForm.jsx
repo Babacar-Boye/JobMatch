@@ -7,6 +7,8 @@ import EtapeProfessionnel from "./EtapeProfessionnel";
 import EtapeRecapitulatif from "./EtapeRecapitulatif";
 import EtapePhotoProfil from "./EtapePhotoProfil";
 
+import axios from "axios";
+
 const TOTAL_ETAPES = 5;
 
 function Candidat() {
@@ -93,7 +95,54 @@ function Candidat() {
     };
 
     // Soumission (bouton "Continuer" / "Créer mon profil", ou touche Entrée)
-    const handleFormSubmit = (e) => {
+    // const handleFormSubmit = async (e) => {
+    //     e.preventDefault();
+
+    //     if (etape < TOTAL_ETAPES) {
+    //         suivant();
+    //         return;
+    //     }
+
+    //     console.log("Données du candidat :", formData);
+
+    //     const data = {
+    //         utilisateur: {
+    //             nom: formData.nom,
+    //             prenom: formData.prenom,
+    //             email: formData.email,
+    //             nom_utilisateur: formData.nom_utilisateur,
+    //             telephone: formData.telephone,
+    //             date_naissance: formData.date_naissance,
+
+    //             password1: formData.mot_de_passe,
+    //             password2: formData.confirmation_mot_de_passe,
+
+    //             photo_profil: formData.photo,
+    //         },
+
+    //         niveau_etude: formData.niveau_etude,
+    //         domaine_metier: formData.domaine_metier,
+    //         lien_linkedin: formData.lien_linkedin,
+    //         lien_portfolio: formData.lien_portfolio,
+    //     };
+
+    //     try {
+    //         const response = await axios.post(
+    //             `${import.meta.env.VITE_API_URL}/candidats/`,
+    //             data
+    //         );
+
+    //         console.log("Inscription réussie :", response.data);
+
+    //     } catch (error) {
+    //         console.error(
+    //             "Erreur lors de l'inscription :",
+    //             error.response?.data || error.message
+    //         );
+    //     }
+    // };
+
+    const handleFormSubmit = async (e) => {
         e.preventDefault();
 
         if (etape < TOTAL_ETAPES) {
@@ -101,8 +150,42 @@ function Candidat() {
             return;
         }
 
-        console.log("Données du candidat :", formData);
-        // Ici viendra l'appel à l'API Django
+        const fd = new FormData();
+
+        // Champs imbriqués -> notation "utilisateur.xxx"
+        fd.append("utilisateur.nom", formData.nom);
+        fd.append("utilisateur.prenom", formData.prenom);
+        fd.append("utilisateur.email", formData.email);
+        fd.append("utilisateur.nom_utilisateur", formData.nom_utilisateur);
+        fd.append("utilisateur.telephone", formData.telephone || "");
+        fd.append("utilisateur.date_naissance", formData.date_naissance);
+        fd.append("utilisateur.password1", formData.mot_de_passe);
+        fd.append("utilisateur.password2", formData.confirmation_mot_de_passe);
+
+        if (formData.photo) {
+            // formData.photo doit être un objet File (ex: e.target.files[0])
+            fd.append("utilisateur.photo_profil", formData.photo);
+        }
+
+        fd.append("niveau_etude", formData.niveau_etude || "");
+        fd.append("domaine_metier", formData.domaine_metier);
+        fd.append("lien_linkedin", formData.lien_linkedin || "");
+        fd.append("lien_portfolio", formData.lien_portfolio || "");
+
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_API_URL}/accounts/candidats/`,
+                fd
+                // Ne PAS fixer Content-Type manuellement, axios/le navigateur
+                // ajoute automatiquement "multipart/form-data; boundary=..."
+            );
+            console.log("Inscription réussie :", response.data);
+        } catch (error) {
+            console.error(
+                "Erreur lors de l'inscription :",
+                error.response?.data || error.message
+            );
+        }
     };
 
     return (

@@ -53,7 +53,7 @@ class Utilisateur(AbstractBaseUser, PermissionsMixin):
     statut_compte = models.CharField(max_length=40, choices=STATUT_COMPTE, default="actif")
     date_Dernier_Connexion = models.DateTimeField(auto_now_add=True)
     date_modification = models.DateTimeField(auto_now=True)
-    email_verifie = models.BooleanField(default=False)
+    email_verifie = models.BooleanField(default=True) # a changer apre
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -120,6 +120,7 @@ class Candidat(models.Model):
     statut_recherche = models.BooleanField(default=True)
     lien_linkedin = models.URLField(max_length=200, blank=True)
     lien_portfolio = models.URLField(max_length=200, blank=True)
+    disponibilite = models.DateField(blank=True, null=True)
 
     class Meta:
         verbose_name = "Candidat"
